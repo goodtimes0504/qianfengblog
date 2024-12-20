@@ -26,22 +26,52 @@ const storage = multer.diskStorage({
 //总结 如果不设置single('img) multer就无法明确哪个部分是需要处理的文件
 //请求体里面必须有一个img字段，否则会报错
 const upload = multer({
-    storage: storage
+    storage: storage,
+    // onError: function (err, req, res, next) {
+    //     console.error('文件上传出现错误:', err);
+    //     res.status(500).json({
+    //         code: 0,
+    //         message: '文件上传出现错误，请稍后再试',
+    //         data: null
+    //     });
+    // }
 }).single('img')
 
 
+// router.post('/', upload, (req, res) => {
+//     const file = req.file
+//     console.log(file)//文件信息 包含文件名、路径等
+//     let imgUrl = '/images/' + file.filename
+//     console.log(imgUrl)//文件路径 例如 /images/xxxx.jpg;
+//     res.json({
+//         code: 1,
+//         message: '上传文件成功',
+//         // 注意 返回的路径不需要加public 因为用户使用http://localhost:3001/images/xxxx.jpg 访问的时候
+//         // 会自动进入public文件夹去找静态资源
+//         data: imgUrl
+//     })
+// })
 router.post('/', upload, (req, res) => {
-    const file = req.file
-    console.log(file)//文件信息 包含文件名、路径等
-    let imgUrl = '/images/' + file.filename
-    console.log(imgUrl)//文件路径 例如 /images/xxxx.jpg;
-    res.json({
-        code: 1,
-        message: '上传文件成功',
-        // 注意 返回的路径不需要加public 因为用户使用http://localhost:3001/images/xxxx.jpg 访问的时候
-        // 会自动进入public文件夹去找静态资源
-        data: imgUrl
-    })
-})
+    try {
+        const file = req.file;
+        console.log(file); //文件信息 包含文件名、路径等
+        let imgUrl = '/images/' + file.filename;
+        console.log(imgUrl); //文件路径 例如 /images/xxxx.jpg;
+        res.json({
+            code: 1,
+            message: '上传文件成功',
+            // 注意 返回的路径不需要加public 因为用户使用http://localhost:3001/images/xxxx.jpg 访问的时候
+            // 会自动进入public文件夹去找静态资源
+            data: imgUrl
+        });
+    } catch (err) {
+        console.error('文件上传过程中出现同步错误:', err);
+        res.status(500).json({
+            code: 0,
+            message: '文件上传出现同步错误，请稍后再试',
+            data: null
+        });
+    }
+});
 
 module.exports = router;

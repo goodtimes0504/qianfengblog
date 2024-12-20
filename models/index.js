@@ -58,9 +58,18 @@ const ArticleModel = mongoose.model('Article', ArticleSchema);
 
 
 const UserSchema = mongoose.Schema({
-    username: String,
-    password: String,
-    nickname: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    nickname: {
+        type: String,
+    },
     headImgUrl: String,
 }, {
     timestamps: true
