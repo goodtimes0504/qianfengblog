@@ -41,7 +41,7 @@ ArticleSchema.virtual("coms", {
     localField: "_id",
     foreignField: "article_id",
     justOne: false, //取Array值- 会把文章对应的评论全部提取出来
-    count: true, //取总数 如果为true 只显示数组的长度，不显示数组的内容
+    // count: true, //取总数 如果为true 只显示数组的长度，不显示数组的内容
 });
 // 下面这两句只有加上了， 虚拟字段才可以显性的看到，不然只能隐性使用
 ArticleSchema.set("toObject", { virtuals: true });

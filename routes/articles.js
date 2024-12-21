@@ -1,22 +1,25 @@
 var express = require('express')
 var router = express.Router()
-var ArticleModel = require('../models/index.js')
+var { ArticleModel } = require('../models/index.js')
 
 /* 匹配/api/articles 才会进来 */
 /**发布文章 */
 router.post('/', function (req, res, next) {
+  console.log(req.body, req.auth.uid);
   ArticleModel.create({ ...req.body, author: req.auth.uid })
-    .then(res => {
+    .then(r => {
       res.json({
         code: 1,
         msg: '发布文章成功',
-        data: res,
+        data: r,
       })
     })
     .catch(err => {
+      console.log(err);
       res.json({
-        code: 1,
-        msg: '发布文章成功',
+        code: 0,
+        msg: '发布文章失败',
+        data: err
       })
     })
 })
@@ -104,7 +107,7 @@ router.patch('/:aid', async function (req, res, next) {
     { new: true }
   )
   res.json({
-    code: 1,
+    code: 200,
     msg: '根据文章aid修改文章成功',
     data: r,
   })

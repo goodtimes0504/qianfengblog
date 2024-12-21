@@ -10,6 +10,8 @@ var articlesRouter = require('./routes/articles');
 var usersRouter = require('./routes/users');
 const uploadRouter = require('./routes/upload');
 const commentsRouter = require('./routes/comments');
+var articlesFrontRouter = require("./routes/front/articles");
+var commentsFrontRouter = require("./routes/front/comments");
 
 
 var app = express();
@@ -40,6 +42,16 @@ app.use(
         url: /^\/api\/articles\/\w+/,
         methods: ["GET"],
       },
+      // 前台两个文章接口不需要权限
+      "/api/front/articles",
+      {
+        url: /^\/api\/front\/articles\/\w+/,
+        methods: ["GET"],
+      },
+      {
+        url: /^\/api\/front\/comments\/articles\/\w+/,
+        methods: ["GET"],
+      },
     ],
   })
 );
@@ -48,6 +60,8 @@ app.use('/api/articles', articlesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/comments', commentsRouter);
+app.use("/api/front/articles", articlesFrontRouter);
+app.use("/api/front/comments", commentsFrontRouter);
 
 app.use(function (err, req, res, next) {
   if (err.name === "UnauthorizedError") {
